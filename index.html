@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BMI Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .input-field {
+            max-width: 300px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body class="bg-success text-white">
+
+    <div class="text-center text-white mt-5">
+        <h1>BMI Calculator</h1>
+    </div>
+
+    <div class="container text-center mt-2 border border-warning border-3 bg-dark p-4">
+        <p>
+            <b>Body Mass Index (BMI)</b> categories are standardized classifications used to assess 
+            weight status based on an individual's height and weight measured in kilograms per 
+            square meter (<i>kg/m²</i>).
+        </p>
+
+        <details>
+            <summary><u>Instructions</u></summary>
+            <p>Input height in meters and weight in kilograms, then click Calculate BMI.</p>
+        </details>
+
+        <br>
+
+        <label for="num1" class="form-label">Height (m)</label>
+        <input type="number" class="form-control input-field mb-2" placeholder="Height in meters" id="num1" oninput="updateHeightSquared()">
+        <kbd id="result1" class="text-center d-block"></kbd>
+
+        <br>
+
+        <label for="num2" class="form-label">Weight (kg)</label>
+        <input type="number" class="form-control input-field mb-2" placeholder="Weight in kilograms" id="num2">
+
+        <button type="button" class="btn btn-warning" onclick="calculateBMI()">Calculate BMI</button>
+        <h3 id="result2"></h3>
+    </div>
+
+    <script>
+        function updateHeightSquared() {
+            let height = parseFloat(document.getElementById("num1").value);
+            if (!isNaN(height) && height > 0) {
+                let squared = Math.pow(height, 2);
+                document.getElementById("result1").innerHTML = `Height²: ${squared.toFixed(2)} m²`;
+                document.getElementById("result1").setAttribute("data-value", squared);
+            } else {
+                document.getElementById("result1").innerHTML = "Invalid height!";
+                document.getElementById("result1").removeAttribute("data-value");
+            }
+        }
+
+        function calculateBMI() {
+            let weight = parseFloat(document.getElementById("num2").value);
+            let heightSquared = parseFloat(document.getElementById("result1").getAttribute("data-value"));
+
+            if (isNaN(weight) || weight <= 0) {
+                document.getElementById("result2").innerHTML = "Invalid weight!";
+                return;
+            }
+
+            if (isNaN(heightSquared) || heightSquared <= 0) {
+                document.getElementById("result2").innerHTML = "Enter a valid height first!";
+                return;
+            }
+
+            let bmi = weight / heightSquared;
+            let category = "";
+
+            if (bmi < 18.5) {
+                category = "Underweight";
+            } else if (bmi >= 18.5 && bmi <= 24.9) {
+                category = "Normal weight";
+            } else if (bmi >= 25 && bmi <= 29.9) {
+                category = "Overweight";
+            } else {
+                category = "Obese";
+            }
+
+            document.getElementById("result2").innerHTML = `BMI: ${bmi.toFixed(2)} (${category})`;
+        }
+    </script>
+</body>
+</html>
